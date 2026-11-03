@@ -1,0 +1,15 @@
+Sistema Automatizado de Valorización Diaria de Bonos Soberanos (DataOps)
+1. Descripción del ProyectoEste proyecto implementa una solución automatizada para la valorización de portafolios de renta fija, combinando buenas prácticas de ingeniería de software, control de versiones con Git/GitHub y un script en Python. Su propósito principal es eliminar los errores manuales en hojas de cálculo y asegurar una trazabilidad total en el cálculo del resultado Mark-to-Market (MTM) de los bonos soberanos.
+2. 2. Requisitos del Entorno y DependenciasPara ejecutar correctamente el script de automatización, asegúrate de tener instalado Python y las siguientes librerías de análisis de datos:Bashpip install pandas openpyxl
+3. Estructura del RepositorioEl proyecto se organiza de forma modular para separar los datos de entrada, los scripts de procesamiento y la documentación:Plaintext/
+├── data/                                      # Archivos de entrada y salida
+│   ├── Portafolio de Bonos Soberanos.xlsx     # Portafolio base con posiciones e inversiones
+│   ├── Renta Fija 02.11.26.xls                # Vector oficial de precios de la SBS
+│   └── Portafolio de Bonos Soberanos_Actualizado.xlsx # Salida generada por el script
+├── scripts/                                   # Scripts de automatización y lógica DataOps
+│   └── actualizar_valorizacion.py             # Script principal de cálculo MTM
+├── docs/                                      # Documentación técnica y reglas de negocio
+└── README.md                                  # Guía principal del repositorio
+4. Funcionamiento del Script (actualizar_valorizacion.py)El script principal automatiza el flujo financiero diario bajo los siguientes pasos lógicos:Detección de Rutas y Archivos: Localiza de forma dinámica la carpeta de datos (data/) y selecciona de manera prioritaria el vector de precios oficial de la SBS (por ejemplo, Renta Fija 02.11.26.xls), con respaldo automático para tomar el archivo más reciente si fuera necesario.Ingesta de Datos:Lee la tabla HTML embebida en el archivo de la SBS mediante pandas.read_html para extraer los precios limpios oficiales por nemónico.Carga la hoja de Valorización del portafolio institucional, omitiendo celdas vacías.Cálculo Financiero y MTM:Mapea el nuevo precio limpio de la SBS al portafolio utilizando el código del nemónico.Aplica un factor de escala de control sobre el monto de compra si supera los umbrales establecidos.Calcula el Monto SBS actualizado y el Resultado Mark-to-Market (MTM):$$\text{Resultado} = \text{Monto SBS} - \text{Monto de Compra}$$Consolidación y Exportación: Genera un nuevo archivo Excel (Portafolio de Bonos Soberanos_Actualizado.xlsx) conservando la integridad de las pestañas originales (Portafolio, Valorización y el respaldo del vector SBS).
+5. 5. Instrucciones de EjecuciónPara correr el proceso de valorización diaria desde tu terminal (Git Bash), ejecuta el siguiente comando:Bashpython scripts/actualizar_valorizacion.py
+Al finalizar, la terminal confirmará la correcta ejecución mostrando la tabla consolidada de resultados por nemónico y la ruta del archivo generado en la carpeta data/.
